@@ -6,7 +6,5 @@ Digital art created in Processing.
 <img src="perlinFFWithPhysicsRandomColourSpirals/output/line-000158.png" alt="this should be an image but the code has failed." style="width:100%">
 <img src="perlinFFWithPhysicsRandomColourSpirals/output/line-000946.png" alt="this should be an image but the code has failed." style="width:100%">
 <img src="perlinFFWithPhysicsRandomColourSpirals/output/line-001455.png" alt="this should be an image but the code has failed." style="width:100%">
-<img src="perlinFFWithPhysicsRandomColourSpirals/output/line-000526.png" alt="this should be an image but the code has failed." style="width:100%">
-<img src="perlinFFWithPhysicsRandomColourSpirals/output/line-000895.png" alt="this should be an image but the code has failed." style="width:100%">
 
 
