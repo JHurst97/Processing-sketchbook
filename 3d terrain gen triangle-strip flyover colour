@@ -1,0 +1,57 @@
+void setup() {
+  size(600, 500, P3D);
+  fill(255);
+  stroke(0);
+  cols = w/res;
+  rows = 300;
+  terrain = new float[cols][rows];
+  frameRate(60);
+  smooth();
+}
+
+int cols;
+int rows;
+int res = 10;
+float noiseStart = 0;
+float[][] terrain;
+int w = 600;
+int h = 1200;
+
+void draw() {
+  background(255);
+
+  translate(0, height/2);
+  rotateX(PI/3);
+  translate(0, -height*2);
+
+  float xOff = noiseStart;
+  for (int i = 0; i < rows; i++) {
+    float yOff = 0;
+    for (int j = 0; j < cols; j++) {
+      terrain[j][i] = constrain(map(noise(xOff, yOff), 0, 1, -100, 100),0,200);
+      yOff+=0.1;
+    }
+    xOff+=0.1;
+  }
+  noiseStart-=0.05;
+  
+  for (int i = 0; i < rows-1; i++) {
+  beginShape(TRIANGLE_STRIP);
+    for (int j = 0; j < cols; j++) {
+      if(terrain[j][i] < 1){
+        fill(0,0,200);
+      }
+      else if(terrain[j][i]>100){
+        fill(255);
+      }
+      else{
+        fill(0,200,0);
+      }
+      vertex(j*res,i*res, terrain[j][i]);
+      vertex(j*res,(i+1)*res, terrain[j][i+1]);
+    }
+  endShape();
+  }
+  
+  println(frameRate);
+}
