@@ -1,9 +1,10 @@
 class Particle {
 
+  PVector startSpeed, speed;
   PVector loc;
   PVector vel;
   PVector acc;
-  float speed, maxSpeed, angle, size, conDist;
+  float  maxSpeed, angle, size, conDist, mouseRadius;
 
   Particle(PVector loc_) {
     loc = loc_;
@@ -11,11 +12,13 @@ class Particle {
   }
 
   void init() {
-    speed = 1;
-    vel = new PVector(random(-speed, speed), random(-speed, speed));
+    startSpeed = new PVector(random(1, 5), random(-1, 1));
+    speed = new PVector(startSpeed.x, startSpeed.y);
+    vel = new PVector(speed.x, speed.y);
     angle = random(0, TWO_PI);
     size = 5;
-    conDist = 75;
+    conDist = 50;
+    mouseRadius = 75;
   }
 
   void update() {
@@ -25,8 +28,9 @@ class Particle {
   }
 
   void show(ArrayList<Particle> particles, Particle currPar) {
-    stroke(255);
-    ellipse(loc.x, loc.y, size, size);
+    stroke(#89E520);
+    strokeWeight(0.1);
+    //ellipse(loc.x, loc.y, size, size);
     connect(particles, currPar);
   }
 
@@ -36,7 +40,7 @@ class Particle {
         //distance from other particle
         float d = dist(loc.x, loc.y, p.loc.x, p.loc.y);
         if (d < conDist) {
-          stroke(255, map(d, 0, conDist, 255, 0));
+          stroke(#89E520, map(d, 0, conDist, 255, 0));
           line(loc.x, loc.y, p.loc.x, p.loc.y);
         }
       }
@@ -45,34 +49,69 @@ class Particle {
 
   void attract() {
     PVector mouse = new PVector(mouseX, mouseY);
-
     //distance from mouse
     float d = dist(mouseX, mouseY, loc.x, loc.y);
-
     //attraction
-    if (d < 100) {
-      maxSpeed = 10;
+    if (d < mouseRadius) {
+      maxSpeed = 5;
+      vel.limit(maxSpeed);
       PVector dir = PVector.sub(mouse, loc);
-
-      dir.normalize();
-
-      dir.mult(-10);
-
+      dir.mult(1);
       acc = dir;
-
       vel.add(dir);
-      vel.limit(speed);
+      vel.limit(maxSpeed);
       loc.add(vel);
     }
-    maxSpeed = 1;
+    vel.limit(startSpeed.x);
+    if (d > mouseRadius) {
+      vel.x = startSpeed.x;
+    }
+    if (loc.x > mouseX) {
+      vel.y = startSpeed.y;
+    }
+  }
+  
+  void repel() {
+    PVector mouse = new PVector(mouseX, mouseY);
+    //distance from mouse
+    float d = dist(mouseX, mouseY, loc.x, loc.y);
+    //attraction
+    if (d < mouseRadius) {
+      maxSpeed = 5;
+      vel.limit(maxSpeed);
+      PVector dir = PVector.sub(mouse, loc);
+      dir.mult(-1);
+      acc = dir;
+      vel.add(dir);
+      vel.limit(maxSpeed);
+      loc.add(vel);
+    }
+    vel.limit(startSpeed.x);
+    if (d > mouseRadius) {
+      vel.x = startSpeed.x;
+    }
+    if (loc.x > mouseX) {
+      vel.y = startSpeed.y;
+    }
   }
 
   void checkEdges() {
-    if (loc.x > width || loc.x < 0) {
-      vel.x = -vel.x;
-    }  
-    if (loc.y > height || loc.y < 0) {
-      vel.y = -vel.y;
+    if (loc.x < 0) {
+      loc.x = width;
+    } else if (loc.x > width) {
+      loc.x = 0;
+    } else if (loc.y < 0) {
+      loc.y = height;
+    } else if (loc.y > height) {
+      loc.y = 0;
     }
+
+    //bounce on edge:
+    //if (loc.x > width || loc.x < 200) {
+    //  vel.x = -vel.x;
+    //}  
+    //if (loc.y > height || loc.y < 0) {
+    //  vel.y = -vel.y;
+    //}
   }
 }
