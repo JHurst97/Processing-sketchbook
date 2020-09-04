@@ -10,19 +10,31 @@ void setup() {
 }
 
 ArrayList <Particle> particles;
-int total = 50;
+int total = 100;
 FloatList fr;
 float average;
 
 void draw() {
-  background(51,51,51,1);
-
+  background(20,20,20,1);
+  fill(255);
+  ellipse(mouseX,mouseY, 10,10);
+  manageText();
+  
   for (Particle p : particles) {
     p.update();
+    p.repel();
     p.show(particles, p);
   }
 
   trackFramerate();
+}
+
+void manageText(){
+  textSize(15);
+  fill(255,100,100);
+  text("Frame rate: " + (int)frameRate, 5, 15);
+  text("Mouse affect: Repulse", 5, 30);
+  text("# of particles: " + particles.size(), 5, 45);
 }
 
 void trackFramerate() {
