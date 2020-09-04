@@ -1,117 +1,67 @@
-class Particle {
-
-  PVector startSpeed, speed;
-  PVector loc;
-  PVector vel;
-  PVector acc;
-  float  maxSpeed, angle, size, conDist, mouseRadius;
-
-  Particle(PVector loc_) {
-    loc = loc_;
-    init();
+void setup() {
+  size(1000, 500);
+  particles = new ArrayList<Particle>();
+  for (int i = 0; i < total; i++) {
+    particles.add(new Particle(new PVector(random(0, width), random(0, height))));
   }
 
-  void init() {
-    startSpeed = new PVector(random(1, 5), random(-1, 1));
-    speed = new PVector(startSpeed.x, startSpeed.y);
-    vel = new PVector(speed.x, speed.y);
-    angle = random(0, TWO_PI);
-    size = 5;
-    conDist = 50;
-    mouseRadius = 75;
-  }
+  //framerate stuff
+  fr = new FloatList();
+}
 
-  void update() {
-    loc.add(vel);
-    attract();
-    checkEdges();
-  }
+ArrayList <Particle> particles;
+int total = 100;
+FloatList fr;
+float average;
 
-  void show(ArrayList<Particle> particles, Particle currPar) {
-    stroke(#89E520);
-    strokeWeight(0.1);
-    //ellipse(loc.x, loc.y, size, size);
-    connect(particles, currPar);
-  }
-
-  void connect(ArrayList<Particle> particles, Particle currPar) {
-    for (Particle p : particles) {
-      if (p != currPar) {
-        //distance from other particle
-        float d = dist(loc.x, loc.y, p.loc.x, p.loc.y);
-        if (d < conDist) {
-          stroke(#89E520, map(d, 0, conDist, 255, 0));
-          line(loc.x, loc.y, p.loc.x, p.loc.y);
-        }
-      }
-    }
-  }
-
-  void attract() {
-    PVector mouse = new PVector(mouseX, mouseY);
-    //distance from mouse
-    float d = dist(mouseX, mouseY, loc.x, loc.y);
-    //attraction
-    if (d < mouseRadius) {
-      maxSpeed = 5;
-      vel.limit(maxSpeed);
-      PVector dir = PVector.sub(mouse, loc);
-      dir.mult(1);
-      acc = dir;
-      vel.add(dir);
-      vel.limit(maxSpeed);
-      loc.add(vel);
-    }
-    vel.limit(startSpeed.x);
-    if (d > mouseRadius) {
-      vel.x = startSpeed.x;
-    }
-    if (loc.x > mouseX) {
-      vel.y = startSpeed.y;
-    }
-  }
+void draw() {
+  background(20,20,20,1);
+  fill(255);
+  ellipse(mouseX,mouseY, 10,10);
+  manageText();
   
-  void repel() {
-    PVector mouse = new PVector(mouseX, mouseY);
-    //distance from mouse
-    float d = dist(mouseX, mouseY, loc.x, loc.y);
-    //attraction
-    if (d < mouseRadius) {
-      maxSpeed = 5;
-      vel.limit(maxSpeed);
-      PVector dir = PVector.sub(mouse, loc);
-      dir.mult(-1);
-      acc = dir;
-      vel.add(dir);
-      vel.limit(maxSpeed);
-      loc.add(vel);
-    }
-    vel.limit(startSpeed.x);
-    if (d > mouseRadius) {
-      vel.x = startSpeed.x;
-    }
-    if (loc.x > mouseX) {
-      vel.y = startSpeed.y;
-    }
+  for (Particle p : particles) {
+    p.update();
+    p.repel();
+    p.show(particles, p);
   }
 
-  void checkEdges() {
-    if (loc.x < 0) {
-      loc.x = width;
-    } else if (loc.x > width) {
-      loc.x = 0;
-    } else if (loc.y < 0) {
-      loc.y = height;
-    } else if (loc.y > height) {
-      loc.y = 0;
-    }
+  trackFramerate();
+}
 
-    //bounce on edge:
-    //if (loc.x > width || loc.x < 200) {
-    //  vel.x = -vel.x;
-    //}  
-    //if (loc.y > height || loc.y < 0) {
-    //  vel.y = -vel.y;
-    //}
+void manageText(){
+  textSize(15);
+  fill(255,100,100);
+  text("Frame rate: " + (int)frameRate, 5, 15);
+  text("Mouse affect: Repulse", 5, 30);
+  text("# of particles: " + particles.size(), 5, 45);
+}
+
+void trackFramerate() {
+  fr.append(frameRate);
+  float sum = 0;
+  for (float f : fr)
+  {
+    sum += f;
   }
+  average = sum/fr.size();
+  println("FR: " + frameRate + ". AVG: " + average);
+}
+
+void mousePressed() {
+  for (int i = 0; i < 1; i++) {
+    particles.add(new Particle(new PVector(mouseX, mouseY)));
+  }
+}
+void mouseDragged() {
+  int r = (int) random(0, 15);
+  if (r == 1) {
+    for (int i = 0; i < 1; i++) {
+      particles.add(new Particle(new PVector(mouseX, mouseY)));
+    }
+  }
+}
+
+void keyPressed() {
+  saveFrame("output/line-######.png");
 }
