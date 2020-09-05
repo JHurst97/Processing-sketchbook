@@ -1,0 +1,16 @@
+Processing particle connector array vs ArrayList
+
+ArrayList
+average: 34
+
+Array
+average: 34
+
+They are the same on the test.
+
+
+Testing every single particle against every other:
+22.4
+
+Only testing particles which haven't been tested yet:
+41.6
