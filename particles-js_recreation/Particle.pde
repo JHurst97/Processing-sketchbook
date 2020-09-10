@@ -18,31 +18,33 @@ class Particle {
     angle = random(0, TWO_PI);
     size = 5;
     conDist = 50;
-    mouseRadius = 75;
+    mouseRadius = 100;
   }
 
-  void update() {
+  void update(String interaction) {
     loc.add(vel);
-    attract();
-    checkEdges();
+    if (interaction == "REPEL") {
+      repel();
+    } else if (interaction == "ATTRACT") {
+      attract();
+    }
+      checkEdges();
   }
 
-  void show(ArrayList<Particle> particles, Particle currPar) {
+  void show(ArrayList<Particle> particles, Particle currPar, int currIndex) {
     stroke(#89E520);
     strokeWeight(0.1);
     //ellipse(loc.x, loc.y, size, size);
-    connect(particles, currPar);
+    connect(particles, currPar, currIndex);
   }
 
-  void connect(ArrayList<Particle> particles, Particle currPar) {
-    for (Particle p : particles) {
-      if (p != currPar) {
-        //distance from other particle
-        float d = dist(loc.x, loc.y, p.loc.x, p.loc.y);
-        if (d < conDist) {
-          stroke(#89E520, map(d, 0, conDist, 255, 0));
-          line(loc.x, loc.y, p.loc.x, p.loc.y);
-        }
+  void connect(ArrayList<Particle> particles, Particle currPar, int currIndex) {
+    for (int i = currIndex; i < particles.size(); i++) {
+      //distance from other particle
+      float d = dist(loc.x, loc.y, particles.get(i).loc.x, particles.get(i).loc.y);
+      if (d < conDist) {
+        stroke(#89E520, map(d, 0, conDist, 255, 0));
+        line(loc.x, loc.y, particles.get(i).loc.x, particles.get(i).loc.y);
       }
     }
   }
@@ -70,14 +72,14 @@ class Particle {
       vel.y = startSpeed.y;
     }
   }
-  
+
   void repel() {
     PVector mouse = new PVector(mouseX, mouseY);
     //distance from mouse
     float d = dist(mouseX, mouseY, loc.x, loc.y);
     //attraction
     if (d < mouseRadius) {
-      maxSpeed = 5;
+      maxSpeed = 10;
       vel.limit(maxSpeed);
       PVector dir = PVector.sub(mouse, loc);
       dir.mult(-1);
@@ -100,6 +102,7 @@ class Particle {
       loc.x = width;
     } else if (loc.x > width) {
       loc.x = 0;
+      loc.y = random(0, height);
     } else if (loc.y < 0) {
       loc.y = height;
     } else if (loc.y > height) {
@@ -109,7 +112,7 @@ class Particle {
     //bounce on edge:
     //if (loc.x > width || loc.x < 200) {
     //  vel.x = -vel.x;
-    //}  
+    //}
     //if (loc.y > height || loc.y < 0) {
     //  vel.y = -vel.y;
     //}
