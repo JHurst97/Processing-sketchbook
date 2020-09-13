@@ -1,6 +1,6 @@
 
 void setup() {
-  size(400, 400);
+  size(600, 600);
   background(255);
   map = new int[width][height];
   for (int i=0; i < height; i++) {
