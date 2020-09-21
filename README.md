@@ -6,6 +6,7 @@
 <img src="LangtonsAnt/output/line-001100.png" alt="this should be an image but the code has failed." style="width:100%">
 <h4> particles-JS recreation.</h4>
 <img src="particles-js_recreation/output/line-000113.png" style="width:100%">
+<img src="particles-js_recreation/output/line-000860.png" style="width:100%">
 <h4>Perlin noise flowfield</h4>
 <img src="perlinFFWithPhysicsRandomColourSpirals/output/line-000378.png" alt="this should be an image but the code has failed." style="width:100%">
 <h4>Perlin noise 3D Terrain generation</h4>
