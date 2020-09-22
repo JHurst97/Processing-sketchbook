@@ -6,7 +6,7 @@ void setup(){
   imageMode(CORNERS);
 
 
-  allImgs = new PImage[23];
+  allImgs = new PImage[howManyImgs];
 
   // we'll have a look in the data folder
   java.io.File folder = new java.io.File(dataPath(sketchPath() + "\\images"));
@@ -15,20 +15,17 @@ void setup(){
 
   //set cover image and cell spacings.
   PImage coverImg = loadImage("elton.jpg");
-  rows = 80;
-  cols = 80;
-  cellWidth = width / cols;
-  cellHeight = height / rows;
+  coverImg.resize(200,200);
+  cellWidth = coverImg.width / numCellsPerSide;
+  cellHeight = coverImg.height / numCellsPerSide;
 
   // put images in array
-  for (int i = 0; i < filenames.length; i++) {
+  for (int i = 0; i < howManyImgs; i++) {
     println(filenames[i]);
     String path = filenames[i];
     allImgs[i] = loadImage(sketchPath("images/" + filenames[i]));
-    allImgs[i].resize(cellWidth, cellHeight);
+    allImgs[i].resize(cellWidth * outputScale, cellHeight * outputScale);
   }
-
-  println("CW: " + cellWidth + " CH: " + cellHeight);
 
   //work out brightness for each image.
   brights = new int[allImgs.length];
@@ -44,53 +41,53 @@ void setup(){
   }
   brights = sort(brights);
 
-  for(int i = 0; i < brights.length; i++){
-    println(brights[i]);
-  }
-
   go(coverImg);
 }
 
-int scl = 5;
 int[] brights;
 PImage[] allImgs;
-int cellWidth, cellHeight, rows, cols;
+int cellWidth, cellHeight;
+int numCellsPerSide = 200;
+int outputScale = 2;
+int howManyImgs = 25;
 
 void go(PImage coverImg){
+  //translate(-5, -5);
   //loop through cover image squares.
-  for(int y = 0; y < rows; y++){
-    for(int x = 0; x < cols; x++){
-      //get average from area.
-      PImage img = coverImg.get(x, y, x+cellWidth, y+cellHeight);
-      int brightness = getAverageFromImg(img);
-      //println(brightness);
-      int imageIndex = (int) map(brightness, 0, 255, 0, brights.length);
 
-      println(imageIndex);
+  PImage workingImage = createImage(cellWidth, cellHeight, RGB);
+
+  for(int y = 0; y < numCellsPerSide; y++){
+    for(int x = 0; x < numCellsPerSide; x++){
+      workingImage.copy(coverImg, x*cellWidth, y*cellHeight, cellWidth, cellHeight, 0, 0, cellWidth, cellHeight);
+      //get average from area.
+      float brightness = getAverageFromImg(workingImage);
+      //println(brightness);
+      int imageIndex = floor(map(brightness, 0, 255, 0, brights.length - 10));
+      println(brightness);
       PImage cellImage = allImgs[imageIndex];
-      image(cellImage, x*cellWidth, y*cellHeight);
+      image(cellImage, x*cellWidth*outputScale, y*cellHeight*outputScale);
     }
   }
+  image(workingImage, 0, 0);
 }
 
 //x + y * width
 
-public int getAverageFromImg(PImage img_){
-  int b= 0;
-  PImage coverImg = img_;
-  coverImg.loadPixels();
+float getAverageFromImg(PImage img_){
+  float b = 0;
+  PImage currImg = img_;
+  currImg.loadPixels();
   //loop through image
-  for (int x =0; x < img_.width; x++) {
-    for (int y = 0; y < img_.height; y++) {
-      int index = x + y * img_.width;
-      b += hue(coverImg.pixels[index]);
-    }
+  for (int i = 0; i < img_.pixels.length; i++) {
+    b += brightness(img_.pixels[i]);
   }
   //calculate average from rgb totals
-  b /= coverImg.pixels.length;
+  b /= img_.pixels.length;
   //println("red: "+r+", green:"+g+", blue:"+b);
   return b;
 }
+
 
 /*  1 loop through squares of rgb image, determine average colour of square.
 *   2 find image with similar average colour.
