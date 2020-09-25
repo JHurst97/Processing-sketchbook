@@ -1,4 +1,8 @@
-<p>This is finally working, here is a sample output below, it's Elton John made up of eltons johns. :)<p>
+<h1>Photo mosaic creator</h1>
+<img src="output/capaBri.png" alt="this should be an image but the code has failed." style="width:100%">
+<p>Here is an image of Robert Capa, a Hungarian-American war photographer. The image above, of him in action, is composed of 20 much smaller versions of his works. He is considered by some to be the greatest combat and adventure photographer in history. The Alt-J song "Taro" is named after his wife, professional partner and fellow photographer Gerda Taro.</p>
+<hr>
+<p>This is finally working, here is a sample output below, it's Van Goph made up of eltons johns. :)<p>
 <p>Still work to be done though, it's far from perfect but this was a great moment when it worked.</p>
 
 <h1>Experimenting!</h1>
