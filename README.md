@@ -1,7 +1,5 @@
-<h1>Processing sketches</h1>
-<h1>:art:</h1>
+<h1>Processing sketches :art:</h1>
 <p>Here are some of my sketches done in processing, feel free to clone the source code and alter it yourself. I recommend playing with the settings on the flowfield, it's rather fun! :) </p>
-<p>I am meaning to upload all of my sketches but these are just the ones from my new PC.</p>
 <h4>Photo mosaic maker</h4>
 <img src="photoMosaicMaker/output/capaBri.png" alt="this should be an image but the code has failed." style="width:100%">
 <h4> Langton's Ant.</h4>
