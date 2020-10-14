@@ -16,7 +16,7 @@ class Particle {
     speed = new PVector(startSpeed.x, startSpeed.y);
     vel = new PVector(speed.x, speed.y);
     angle = random(0, TWO_PI);
-    size = 5;
+    size = 6;
     conDist = 50;
     mouseRadius = 100;
   }
